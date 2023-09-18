@@ -15,15 +15,15 @@ public class EmployeeService {
         return repo.findAll();
     }
 
-    public void save(Employee attendance) {
-        repo.save(attendance);
+    public void save(Employee employee) {
+        repo.save(employee);
     }
 
-    public Employee get(Integer eid) {
-        return repo.findById(eid).get();
+    public Employee get(Integer id) {
+        return repo.findById(id).get();
     }
 
-    public void delete(Integer eid) {
-        repo.deleteById(eid);
+    public void delete(Integer id) {
+        repo.deleteById(id);
     }
 }

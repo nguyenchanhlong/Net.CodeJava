@@ -52,7 +52,7 @@ public class EmployeeController {
     @PutMapping("/employees/{id}")
     public ResponseEntity<?> update(@RequestBody Employee employee, @PathVariable Integer id){
         try{
-            Employee existEmployee = service.get(id);
+            // Employee existEmployee = service.get(id);
             service.save(employee);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e){
