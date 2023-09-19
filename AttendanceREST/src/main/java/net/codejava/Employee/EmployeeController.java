@@ -30,38 +30,56 @@ public class EmployeeController {
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> get(@PathVariable Integer id) {
         // This help api not show the error with mean NOT FOUND
-        try{
+        try {
             Employee employee = service.get(id);
-            return new ResponseEntity<Employee>(employee,HttpStatus.OK);
-        } catch (NoSuchElementException e){
+            return new ResponseEntity<Employee>(employee, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
         }
     }
+
     // Use PostMapping to POST
     @PostMapping("employees")
-    public void add(@RequestBody Employee employee){
+    public ResponseEntity<?> add(@RequestBody Employee employee) {
+        /*
+         * This is the function with the Exist Employee
+         * if it exist the Httpstatus will show the error
+         */
+
+        List<Employee> existingEmployees = service.listAll();
+        for (Employee existingEmployee : existingEmployees) {
+            if (existingEmployee.getId().equals(employee.getId())) {
+                return new ResponseEntity<>("Employee with ID: " + employee.getId() + " already exist",
+                        HttpStatus.BAD_REQUEST);
+            }
+        }
         service.save(employee);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-        /* {
-        "id":1,
-        "name": "Long",
-        "phone": "03165484984",
-        "email": "dada@gmail.com"
-        } 
-    This is the JSON file if want to PUT*/
+
+    /*
+     * {
+     * "id":1,
+     * "name": "Long",
+     * "phone": "03165484984",
+     * "email": "dada@gmail.com"
+     * }
+     * This is the JSON file if want to PUT
+     */
     @PutMapping("/employees/{id}")
-    public ResponseEntity<?> update(@RequestBody Employee employee, @PathVariable Integer id){
-        try{
+    public ResponseEntity<?> update(@RequestBody Employee employee, @PathVariable Integer id) {
+        try {
+            Employee existEmployee = service.get(id);
             // Employee existEmployee = service.get(id);
             service.save(employee);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/employees/{id}")
-    public void delete(@PathVariable Integer id){
+    public void delete(@PathVariable Integer id) {
         service.delete(id);
     }
 }
